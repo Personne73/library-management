@@ -20,7 +20,7 @@ public class Book {
     private String publisher;
 
     @Column(name = "publication_year", nullable = false)
-    private int publicationYear;
+    private Integer publicationYear;
 
     @Column(name = "genre", nullable = false)
     private String genre;
@@ -28,23 +28,27 @@ public class Book {
     @Column(name = "summary", nullable = false)
     private String summary;
 
+    @Column(name = "isbn", nullable = false)
+    private String isbn;
+
     @Column(name = "is_borrowed", nullable = false)
     private boolean isBorrowed;
 
     public Book() {} // required by JPA
 
-    public Book(String title, String author, String publisher, int publicationYear, String genre, String summary) {
+    public Book(String title, String author, String publisher, Integer publicationYear, String genre, String summary, String isbn) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.publicationYear = publicationYear;
         this.genre = genre;
         this.summary = summary;
+        this.isbn = isbn;
         this.isBorrowed = false; // default value
     } // constructor
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -52,7 +56,7 @@ public class Book {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -60,7 +64,7 @@ public class Book {
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(String author) {
@@ -68,23 +72,23 @@ public class Book {
     }
 
     public String getPublisher() {
-        return publisher;
+        return this.publisher;
     }
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
-    public int getPublicationYear() {
-        return publicationYear;
+    public Integer getPublicationYear() {
+        return this.publicationYear;
     }
 
-    public void setPublicationYear(int publicationYear) {
+    public void setPublicationYear(Integer publicationYear) {
         this.publicationYear = publicationYear;
     }
 
     public String getGenre() {
-        return genre;
+        return this.genre;
     }
 
     public void setGenre(String genre) {
@@ -92,15 +96,23 @@ public class Book {
     }
 
     public String getSummary() {
-        return summary;
+        return this.summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
     }
 
+    public String getIsbn() {
+        return this.isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
     public boolean isBorrowed() {
-        return isBorrowed;
+        return this.isBorrowed;
     }
 
     public void setBorrowed(boolean isBorrowed) {

@@ -1,5 +1,6 @@
 package com.mooc.library_management.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ public class Borrow {
 
     @ManyToOne // Many Borrow records can be associated with one User
     @JoinColumn(name = "user", nullable = false)
+    @JsonBackReference // to avoid infinite recursion
     private User user;
 
     @Column(name = "borrow_date", nullable = false)
@@ -38,7 +40,7 @@ public class Borrow {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -46,7 +48,7 @@ public class Borrow {
     }
 
     public Book getBook() {
-        return book;
+        return this.book;
     }
 
     public void setBook(Book book) {
@@ -54,7 +56,7 @@ public class Borrow {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(User user) {
@@ -62,7 +64,7 @@ public class Borrow {
     }
 
     public LocalDate getBorrowDate() {
-        return borrowDate;
+        return this.borrowDate;
     }
 
     public void setBorrowDate(LocalDate borrowDate) {
@@ -70,7 +72,7 @@ public class Borrow {
     }
 
     public LocalDate getReturnDate() {
-        return returnDate;
+        return this.returnDate;
     }
 
     public void setReturnDate(LocalDate returnDate) {
@@ -78,11 +80,11 @@ public class Borrow {
     }
 
     public boolean isReturned() {
-        return isReturned;
+        return this.isReturned;
     }
 
     public void setReturned(boolean returned) {
-        isReturned = returned;
+        this.isReturned = returned;
     }
 }
 

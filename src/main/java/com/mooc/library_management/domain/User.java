@@ -1,7 +1,9 @@
 package com.mooc.library_management.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,8 +20,10 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "borrows") // One User can have many Borrow records
-    private List<Borrow> borrows;
+    @OneToMany(mappedBy = "user") // One User can have many Borrow records
+    @Column(name = "borrows", nullable = false)
+    @JsonManagedReference // to avoid infinite recursion
+    private List<Borrow> borrows = new ArrayList<>();
 
     public User() {} // required by JPA
 
@@ -29,7 +33,7 @@ public class User {
     } // constructor
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -37,7 +41,7 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -45,7 +49,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -53,7 +57,7 @@ public class User {
     }
 
     public List<Borrow> getBorrows() {
-        return borrows;
+        return this.borrows;
     }
 
     public void setBorrows(List<Borrow> borrows) {
