@@ -2,7 +2,6 @@ package com.mooc.library_management.controller;
 
 import com.mooc.library_management.domain.Book;
 import com.mooc.library_management.service.BookService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         Book createdBook = this.bookService.addBook(book);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
+        return ResponseEntity.status(201).body(createdBook);
     }
 
     @GetMapping
