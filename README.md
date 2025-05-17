@@ -44,6 +44,8 @@ library-management/
 │   │   │               │   ├── BookService.java
 │   │   │               │   ├── BorrowService.java
 │   │   │               │   └── UserService.java
+│   │   │               ├── swagger/
+│   │   │               │   └── SwaggerConfig.java
 │   │   │               └── LibraryManagementApplication.java
 │   │   └── resources/
 │   │       ├── application.properties
