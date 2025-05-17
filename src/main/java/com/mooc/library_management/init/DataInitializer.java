@@ -77,6 +77,12 @@ public class DataInitializer implements CommandLineRunner {
         borrowRepository.save(borrow1);
         borrowRepository.save(borrow2);
 
+        book1.getBorrows().add(borrow1);
+        book1.setBorrowed(true);
+        book2.getBorrows().add(borrow2);
+        bookRepository.save(book1);
+        bookRepository.save(book2);
+
         user1.getBorrows().add(borrow1);
         user2.getBorrows().add(borrow2);
         userRepository.save(user1);
