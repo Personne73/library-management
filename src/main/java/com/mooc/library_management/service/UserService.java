@@ -1,5 +1,7 @@
 package com.mooc.library_management.service;
 
+import com.mooc.library_management.domain.Book;
+import com.mooc.library_management.domain.Borrow;
 import com.mooc.library_management.domain.User;
 import com.mooc.library_management.exception.ResourceNotFoundException;
 import com.mooc.library_management.repository.UserRepository;
@@ -45,7 +47,6 @@ public class UserService {
         // Update the user details
         if (user.getName() != null) originalUser.setName(user.getName());
         if (user.getEmail() != null) originalUser.setEmail(user.getEmail());
-        if (user.getBorrows() != null) originalUser.setBorrows(user.getBorrows());
 
         return this.userRepository.save(originalUser);
     }
@@ -53,9 +54,16 @@ public class UserService {
     // Delete a user by ID
     public void deleteUserById(Long id) {
         // Check if the user exists
-        if (!this.userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", id));
+
+        for (Borrow borrow : user.getBorrows()) {
+            Book book = borrow.getBook();
+            if (book != null) {
+                book.getBorrows().remove(borrow);
+            }
         }
-        this.userRepository.deleteById(id);
+
+        userRepository.delete(user);
     }
 }

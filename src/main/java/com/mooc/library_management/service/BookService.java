@@ -1,6 +1,8 @@
 package com.mooc.library_management.service;
 
 import com.mooc.library_management.domain.Book;
+import com.mooc.library_management.domain.Borrow;
+import com.mooc.library_management.domain.User;
 import com.mooc.library_management.exception.ResourceNotFoundException;
 import com.mooc.library_management.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -43,14 +45,18 @@ public class BookService {
                 .orElseThrow(() -> new ResourceNotFoundException("Book", id));
 
         // Update the book details
-        if (originalBook.getTitle() != null) originalBook.setTitle(book.getTitle());
-        if (originalBook.getAuthor() != null) originalBook.setAuthor(book.getAuthor());
-        if (originalBook.getPublisher() != null) originalBook.setPublisher(book.getPublisher());
-        if (originalBook.getPublicationYear() != null) originalBook.setPublicationYear(book.getPublicationYear());
-        if (originalBook.getGenre() != null) originalBook.setGenre(book.getGenre());
-        if (originalBook.getSummary() != null) originalBook.setSummary(book.getSummary());
-        if (originalBook.getIsbn() != null) originalBook.setIsbn(book.getIsbn());
-        if (originalBook.isBorrowed()) originalBook.setBorrowed(book.isBorrowed());
+        if (book.getTitle() != null) originalBook.setTitle(book.getTitle());
+        if (book.getAuthor() != null) originalBook.setAuthor(book.getAuthor());
+        if (book.getPublisher() != null) originalBook.setPublisher(book.getPublisher());
+        if (book.getPublicationYear() != null) originalBook.setPublicationYear(book.getPublicationYear());
+        if (book.getGenre() != null) originalBook.setGenre(book.getGenre());
+        if (book.getSummary() != null) originalBook.setSummary(book.getSummary());
+        if (book.getIsbn() != null) originalBook.setIsbn(book.getIsbn());
+
+        boolean isAnyBorrowed = originalBook.getBorrows().stream()
+                .anyMatch(borrow -> !borrow.isReturned());
+
+        originalBook.setBorrowed(isAnyBorrowed);
 
         return this.bookRepository.save(originalBook);
     }
@@ -58,9 +64,16 @@ public class BookService {
     // Delete a book by ID
     public void deleteBookById(Long id) {
         // Check if the book exists
-        if (!this.bookRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Book", id);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book", id));
+
+        for (Borrow borrow : book.getBorrows()) {
+            User user = borrow.getUser();
+            if (user != null) {
+                user.getBorrows().remove(borrow);
+            }
         }
-        this.bookRepository.deleteById(id);
+
+        this.bookRepository.delete(book);
     }
 }

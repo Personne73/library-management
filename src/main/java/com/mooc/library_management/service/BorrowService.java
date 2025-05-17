@@ -1,7 +1,9 @@
 package com.mooc.library_management.service;
 
+import com.mooc.library_management.domain.Book;
 import com.mooc.library_management.domain.Borrow;
 import com.mooc.library_management.exception.ResourceNotFoundException;
+import com.mooc.library_management.repository.BookRepository;
 import com.mooc.library_management.repository.BorrowRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +13,26 @@ import java.util.List;
 public class BorrowService {
 
     private final BorrowRepository borrowRepository;
+    private final BookRepository bookRepository;
 
-    public BorrowService(BorrowRepository borrowRepository) {
+    public BorrowService(BorrowRepository borrowRepository, BookRepository bookRepository) {
         this.borrowRepository = borrowRepository;
+        this.bookRepository = bookRepository;
     }
 
     // Create a new borrow record
     public Borrow createBorrow(Borrow borrow) {
-        return this.borrowRepository.save(borrow);
+        //return this.borrowRepository.save(borrow);
+        if (!borrow.getBook().isBorrowed()) {
+            borrow.getBook().setBorrowed(true);
+        }
+
+        Borrow createdBorrow = this.borrowRepository.save(borrow);
+        Book book = borrow.getBook();
+        book.getBorrows().add(createdBorrow);
+        this.bookRepository.save(book);
+
+        return createdBorrow;
     }
 
     // Get all borrow records
@@ -55,9 +69,21 @@ public class BorrowService {
     // Delete a borrow record by ID
     public void deleteBorrowById(Long id) {
         // Check if the borrow record exists
-        if (!this.borrowRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Borrow", id);
+        Borrow borrow = this.borrowRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Borrow", id));
+
+        // Remove the borrow record from the book and user
+        if (!borrow.isReturned()) {
+            borrow.getBook().setBorrowed(false);  // Mark book as available again
+            bookRepository.save(borrow.getBook());
         }
-        this.borrowRepository.deleteById(id);
+        if (borrow.getBook() != null) {
+            borrow.getBook().getBorrows().remove(borrow);
+        }
+        if (borrow.getUser() != null) {
+            borrow.getUser().getBorrows().remove(borrow);
+        }
+
+        this.borrowRepository.delete(borrow);
     }
 }
