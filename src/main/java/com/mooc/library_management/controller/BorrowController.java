@@ -2,6 +2,7 @@ package com.mooc.library_management.controller;
 
 import com.mooc.library_management.domain.Borrow;
 import com.mooc.library_management.service.BorrowService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/borrows")
+@Tag(name = "Borrows", description = "Borrows management")
 public class BorrowController {
 
     private final BorrowService borrowService;
