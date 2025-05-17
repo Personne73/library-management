@@ -89,8 +89,7 @@ Run the application with the following command:
 ```
 
 You can then access :
-- the application at [http://localhost:8080](http://localhost:8080)
-- the documentation UI at [OpenAPI documentation](http://localhost:8080/swagger)
-- the documentation json at [http://localhost:8080/openapi](http://localhost:8080/openapi)
+- [OpenAPI documentation](http://localhost:8080/swagger)
+- [Swagger Json](http://localhost:8080/openapi)
 
 And test it with Postman or any other API testing tool.
