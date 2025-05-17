@@ -14,11 +14,12 @@ public class Borrow {
 
     @ManyToOne // Many Borrow records can be associated with one Book
     @JoinColumn(name = "book", nullable = false)
+    @JsonBackReference(value = "book-borrows")
     private Book book;
 
     @ManyToOne // Many Borrow records can be associated with one User
     @JoinColumn(name = "user", nullable = false)
-    @JsonBackReference // to avoid infinite recursion
+    @JsonBackReference(value = "user-borrows") // to avoid infinite recursion
     private User user;
 
     @Column(name = "borrow_date", nullable = false)

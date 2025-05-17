@@ -20,9 +20,12 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "user") // One User can have many Borrow records
-    @Column(name = "borrows", nullable = false)
-    @JsonManagedReference // to avoid infinite recursion
+    // One User can have many Borrow records
+    // Any operation on User will cascade to Borrow records
+    // If a User is deleted, all their Borrow records will be deleted as well
+    // orphanRemoval = true means that if a Borrow record is removed from the User, it will be deleted from the database
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-borrows") // to avoid infinite recursion
     private List<Borrow> borrows = new ArrayList<>();
 
     public User() {} // required by JPA

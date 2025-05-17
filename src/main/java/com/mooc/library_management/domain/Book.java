@@ -1,6 +1,10 @@
 package com.mooc.library_management.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -33,6 +37,14 @@ public class Book {
 
     @Column(name = "is_borrowed", nullable = false)
     private boolean isBorrowed;
+
+    // One Book can have many Borrow records
+    // Any operation on Book will cascade to Borrow records
+    // If a Book is deleted, all its Borrow records will be deleted as well
+    // orphanRemoval = true means that if a Borrow record is removed from the Book, it will be deleted from the database
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "book-borrows") // to avoid infinite recursion
+    private List<Borrow> borrows = new ArrayList<>();
 
     public Book() {} // required by JPA
 
@@ -117,5 +129,13 @@ public class Book {
 
     public void setBorrowed(boolean isBorrowed) {
         this.isBorrowed = isBorrowed;
+    }
+
+    public List<Borrow> getBorrows() {
+        return this.borrows;
+    }
+
+    public void setBorrows(List<Borrow> borrows) {
+        this.borrows = borrows;
     }
 }
