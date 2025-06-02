@@ -1,6 +1,8 @@
 # Library Management System
 
-This is a library management system built with Spring Boot, React, and MySQL.
+Library management system built with Spring Boot, React, and MySQL.
+It's a backend-driven system for managing books, users, and borrow/return operations in a library. 
+Designed with scalability and modularity in mind, featuring role-based access control and RESTful APIs.
 The system allows users to manage books, authors, and categories.
 
 ## Requirements
